@@ -31,8 +31,8 @@ uses native Apple Clang 21 and C++23 with the standard library enabled.
 
 Every public header compiles independently, as do concrete uses of unit conversion,
 time arithmetic, literals and interactive scaling. Both retained test files now
-build with Catch2/CTest, providing three passing cases for arithmetic/literals,
-legacy conversions and unsigned clock wraparound; see [tests/README.md](tests/README.md).
+build with Catch2/CTest, providing four passing cases for arithmetic/literals,
+legacy conversions, unsigned clock wraparound and scalar division; see [tests/README.md](tests/README.md).
 
 Existing literal-operator whitespace produces Clang deprecation warnings.
 On 21 September 2026, the `PICOS`/`NANOS` enum collision was corrected using
@@ -41,9 +41,10 @@ onward increase by one. No dedicated test was added for that correction, as
 requested; the subsequent foundation/peripheral build and retained runtime suite
 pass with the updated header, and its ledger hash is current.
 
-Coverage remains partial. The inherited `Period::operator/` implementation still
-multiplies instead of dividing; it is outside this GPIO/timing extraction and is
-not exercised by the retained cases. Hardware behavior remains unvalidated.
+`Period::operator/` now divides by its scalar operand, preserving the period
+storage type and units. Its regression reproduced `12 / 3 == 36` before the fix;
+signed/unsigned, fractional and integer-truncation cases now pass. Coverage remains
+partial, and hardware behavior remains unvalidated.
 
 Source: [owebeeone/ardoinus](https://github.com/owebeeone/ardoinus). Its README
 selects the MIT license in `LICENSE.txt`; that notice is copied unchanged here.

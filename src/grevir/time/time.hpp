@@ -142,7 +142,7 @@ public:
 
   template <typename W>
   Period operator /(W rhs) const {
-    return Period(value * rhs);
+    return Period(value / rhs);
   }
 
   bool operator ==(const Period& rhs) const {

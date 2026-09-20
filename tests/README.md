@@ -4,8 +4,9 @@
 concrete time, conversion, literal and scaling users.
 
 `GREVIR_BUILD_HOST_TESTS=ON` builds the two retained test files with Catch2/CTest.
-Three runtime cases cover typed arithmetic/literals, the historical conversion
-matrix over nine numeric types, and unsigned 32-bit elapsed-time wraparound.
+Four runtime cases cover typed arithmetic/literals, the historical conversion
+matrix over nine numeric types, unsigned 32-bit elapsed-time wraparound, and
+scalar division (signed/unsigned, fractional values, truncation and preserved units).
 The old SetlTest/assertThat dependency is removed. Disabled historical arithmetic
 experiments remain disabled; this suite does not cover every operator or unit.
 No dedicated PICOS/NANOS regression was added, per the user's instruction.

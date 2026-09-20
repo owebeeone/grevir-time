@@ -1,5 +1,6 @@
 #include <cstdint>
 #include <limits>
+#include <type_traits>
 // Migrated from the retained Ardoinus cases to Catch2.
 
 
@@ -129,4 +130,21 @@ TEST_CASE("unsigned time subtraction measures elapsed time across wraparound") {
   REQUIRE(start == now);
   now -= Delta(5);
   REQUIRE(now.get() == maximum - 2);
+}
+
+TEST_CASE("period division preserves units and uses numeric division") {
+  using Millis = setl::Period<int>;
+  const Millis duration(12);
+  REQUIRE((duration / 3).get() == 4);
+  REQUIRE((Millis(13) / 3).get() == 4);
+  REQUIRE((Millis(-13) / 3).get() == -4);
+  REQUIRE((duration / -3).get() == -4);
+  REQUIRE((Millis(0) / 3).get() == 0);
+  REQUIRE((setl::Period<unsigned>(12) / 3u).get() == 4u);
+  using Seconds = setl::Period<double, setl::TimeUnit::SECOND>;
+  const auto quotient = Seconds(7.5) / 2.5;
+  REQUIRE(quotient.get() == 3.0);
+  REQUIRE((Millis(9) / 2.0).get() == 4);
+  static_assert(decltype(quotient)::UNITS == setl::TimeUnit::SECOND);
+  static_assert(std::is_same_v<decltype(duration / 3), Millis>);
 }

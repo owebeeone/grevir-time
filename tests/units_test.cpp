@@ -1,15 +1,15 @@
-// Retained legacy case; harness adaptation is pending (see tests/README.md).
+// Migrated from the retained Ardoinus cases to Catch2.
 #include <grevir/time/units.hpp>
-#include "assert_that.h"
 
-#include "setl_test_framework.h"
+
+#include <catch2/catch_test_macros.hpp>
 #include <grevir/base/compat/cstdint.hpp>
 
 namespace setl_time_unit_test {
 
-using setl_test::assertThat;
 
-class Setl_TIME_UNIT_TEST_DO_NOT_USE : setl_test::SetlTest {
+
+struct Setl_TIME_UNIT_TEST_DO_NOT_USE {
 
   static_assert(
     setl::ConvertTime<
@@ -58,14 +58,14 @@ class Setl_TIME_UNIT_TEST_DO_NOT_USE : setl_test::SetlTest {
     static const auto NANOS = setl::TimeUnit::NANOS;
 
     void to_test() {
-      assertThat(ConvertTime<DAY, MINUTE>::convert(T(1))).eq(24 * 60);
-      assertThat(ConvertTime<MICROS, NANOS>::convert(T(1))).eq(1000);
-      assertThat(ConvertTime<NANOS, MICROS>::convert(T(10001))).eq(T(10001)/1000);
+      REQUIRE((ConvertTime<DAY, MINUTE>::convert(T(1))) == (24 * 60));
+      REQUIRE((ConvertTime<MICROS, NANOS>::convert(T(1))) == (1000));
+      REQUIRE((ConvertTime<NANOS, MICROS>::convert(T(10001))) == (T(10001)/1000));
     }
 
   };
 
-  bool run() override {
+  bool run() {
     TestCollection<unsigned> t1;
     TestCollection<unsigned short> t2;
     TestCollection<unsigned long> t3;
@@ -79,6 +79,9 @@ class Setl_TIME_UNIT_TEST_DO_NOT_USE : setl_test::SetlTest {
   }
 };
 
-Setl_TIME_UNIT_TEST_DO_NOT_USE time_unit_test;
+TEST_CASE("time unit conversions preserve legacy results") {
+  Setl_TIME_UNIT_TEST_DO_NOT_USE test;
+  REQUIRE(test.run());
+}
 
 }

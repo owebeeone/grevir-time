@@ -25,6 +25,10 @@ install(FILES cmake/grevir-time-config.cmake
 install(FILES LICENSE.txt DESTINATION ${CMAKE_INSTALL_DATADIR}/grevir-time)
 
 option(GREVIR_BUILD_COMPILE_CHECKS "Compile native headers and template users" OFF)
-if(GREVIR_BUILD_COMPILE_CHECKS)
+option(GREVIR_BUILD_HOST_TESTS "Run deterministic native behavior tests" OFF)
+if(GREVIR_BUILD_HOST_TESTS)
+  enable_testing()
+endif()
+if(GREVIR_BUILD_COMPILE_CHECKS OR GREVIR_BUILD_HOST_TESTS)
   add_subdirectory(tests)
 endif()

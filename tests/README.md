@@ -1,11 +1,16 @@
-# Compile checks and retained cases
+# Native checks and retained tests
 
-Enable compile checks with `GREVIR_BUILD_COMPILE_CHECKS=ON`.
-The native build compiles each installed header by itself and the explicit
-`native_compile.cpp` template users. Grevir Base also compiles the legacy tuple
-static assertions extracted from its public header.
+`GREVIR_BUILD_COMPILE_CHECKS=ON` compiles each public header independently and
+concrete time, conversion, literal and scaling users.
 
-Other `.cpp` files are retained historical cases with relocated production
-includes. They are **not built or run yet**: their old `setl_test_framework.h` and
-`assert_that.h` dependencies belong to the future test-support extraction.
-Porting those cases and adding a runtime harness are separate work.
+`GREVIR_BUILD_HOST_TESTS=ON` builds the two retained test files with Catch2/CTest.
+Three runtime cases cover typed arithmetic/literals, the historical conversion
+matrix over nine numeric types, and unsigned 32-bit elapsed-time wraparound.
+The old SetlTest/assertThat dependency is removed. Disabled historical arithmetic
+experiments remain disabled; this suite does not cover every operator or unit.
+No dedicated PICOS/NANOS regression was added, per the user's instruction.
+
+For standalone builds, install Grevir Base and Grevir Test Support, and provide
+Catch2 3.8.1 through an installed package or `GREVIR_CATCH2_SOURCE_DIR`. The workspace
+supplies the helper automatically. Dependency fetching is disabled unless explicitly
+enabled. Run `ctest --test-dir build/host --output-on-failure` after building.

@@ -30,14 +30,20 @@ uses native Apple Clang 21 and C++23 with the standard library enabled.
 ## Current validation
 
 Every public header compiles independently, as do concrete uses of unit conversion,
-time arithmetic, literals and interactive scaling. Historical tests are retained
-but await harness adaptation; see [tests/README.md](tests/README.md).
+time arithmetic, literals and interactive scaling. Both retained test files now
+build with Catch2/CTest, providing three passing cases for arithmetic/literals,
+legacy conversions and unsigned clock wraparound; see [tests/README.md](tests/README.md).
 
-Algorithms are preserved during relocation. Existing literal-operator whitespace
-produces Clang deprecation warnings. A known legacy issue, `TimeUnit::PICOS` and
-`TimeUnit::NANOS` sharing the same enum value, also remains for a focused correctness
-change. Native compilation does not establish the runtime correctness of those
-algorithms or hardware behavior.
+Existing literal-operator whitespace produces Clang deprecation warnings.
+On 21 September 2026, the `PICOS`/`NANOS` enum collision was corrected using
+sequential values and an explicit `JIFFY = CENTIS` alias. Values from `NANOS`
+onward increase by one. No dedicated test was added for that correction, as
+requested; the subsequent foundation/peripheral build and retained runtime suite
+pass with the updated header, and its ledger hash is current.
+
+Coverage remains partial. The inherited `Period::operator/` implementation still
+multiplies instead of dividing; it is outside this GPIO/timing extraction and is
+not exercised by the retained cases. Hardware behavior remains unvalidated.
 
 Source: [owebeeone/ardoinus](https://github.com/owebeeone/ardoinus). Its README
 selects the MIT license in `LICENSE.txt`; that notice is copied unchanged here.

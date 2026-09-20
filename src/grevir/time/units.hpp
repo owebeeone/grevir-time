@@ -26,19 +26,19 @@ namespace setl {
 /** Time unit names. */
 enum class TimeUnit : std::uint8_t {
   YOCTOS = 1,     // yoctoseconds
-  ATTOS = 2,      // attoseconds
-  FEMTOS = 3,     // femtoseconds
-  PICOS = 4,      // picosseconds
-  NANOS = 4,      // nanoseconds
-  MICROS = 5,     // microseconds
-  MILLIS = 6,     // milliseconds
-  CENTIS = 7,     // centiseconds
-  JIFFY = 7,      // Synonym for centis
-  SECOND = 8,
-  MINUTE = 9,
-  HOUR = 10,
-  DAY = 11,
-  WEEK = 12,
+  ATTOS,         // attoseconds
+  FEMTOS,        // femtoseconds
+  PICOS,         // picoseconds
+  NANOS,         // nanoseconds
+  MICROS,        // microseconds
+  MILLIS,        // milliseconds
+  CENTIS,        // centiseconds
+  JIFFY = CENTIS, // Synonym for centis
+  SECOND,
+  MINUTE,
+  HOUR,
+  DAY,
+  WEEK,
 };
 
 /**

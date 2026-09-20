@@ -1,16 +1,18 @@
-// Retained legacy case; harness adaptation is pending (see tests/README.md).
+#include <cstdint>
+#include <limits>
+// Migrated from the retained Ardoinus cases to Catch2.
 
 
 #include <grevir/time/time.hpp>
 
-#include "setl_test_framework.h"
+#include <catch2/catch_test_macros.hpp>
 
-#include "assert_that.h"
+
 
 
 namespace {
   
-using setl_test::assertThat;
+
 
 #if 0
 template <typename Lhs, typename Rhs, int n = sizeof(Lhs(1) * Rhs(1))>
@@ -54,7 +56,7 @@ static_assert(allowed<Add, setl::Time<int>, setl::Period<int>>, "t+p should be a
 #endif
 
 // Test time...
-class SetlTimeTest_DO_NOT_USE : setl_test::SetlTest {
+struct SetlTimeTest_DO_NOT_USE {
 
   template <typename T>
   struct TimeTest {
@@ -69,14 +71,14 @@ class SetlTimeTest_DO_NOT_USE : setl_test::SetlTest {
     }
 
     void do_test() {
-      assertThat(((TType(2) + PType(4)) == TType(6))).eq(true);
-      assertThat(((PType(2) + TType(4)) == TType(6))).eq(true);
-      assertThat((t2 - t1) == PType(t2.get() - t1.get())).eq(true);
-      assertThat(((PType(4) * 1.5) == PType(6))).eq(true);
-      assertThat(((PType(4) * 1.5f) == PType(6))).eq(true);
-      assertThat(((PType(4) * 1.5) != PType(6))).eq(false);
-      assertThat(((PType(4) += PType(2)) == PType(6))).eq(true);
-      assertThat((PType(PTypeSecs(4)) == PType(4000))).eq(true);
+      REQUIRE((((TType(2) + PType(4)) == TType(6))) == (true));
+      REQUIRE((((PType(2) + TType(4)) == TType(6))) == (true));
+      REQUIRE(((t2 - t1) == PType(t2.get() - t1.get())) == (true));
+      REQUIRE((((PType(4) * 1.5) == PType(6))) == (true));
+      REQUIRE((((PType(4) * 1.5f) == PType(6))) == (true));
+      REQUIRE((((PType(4) * 1.5) != PType(6))) == (false));
+      REQUIRE((((PType(4) += PType(2)) == PType(6))) == (true));
+      REQUIRE(((PType(PTypeSecs(4)) == PType(4000))) == (true));
       // PTypeNanos n{ PTypeWeek(1) }; // should fail to compile. Overflow of scale.
     }
 
@@ -97,19 +99,34 @@ class SetlTimeTest_DO_NOT_USE : setl_test::SetlTest {
     using setl::operator"" _sec;
     using setl::operator"" _min;
 
-    assertThat((12.1_sec == setl::Period<long double, setl::TimeUnit::SECOND>(12.1L))).isTrue();
-    assertThat((12.1_sec == setl::period<setl::TimeUnit::SECOND>(12.1L))).isTrue();
-    assertThat((12_sec == setl::Period<unsigned long long, setl::TimeUnit::SECOND>(12))).isTrue();
+    REQUIRE(((12.1_sec == setl::Period<long double, setl::TimeUnit::SECOND>(12.1L))));
+    REQUIRE(((12.1_sec == setl::period<setl::TimeUnit::SECOND>(12.1L))));
+    REQUIRE(((12_sec == setl::Period<unsigned long long, setl::TimeUnit::SECOND>(12))));
 
-    assertThat((1.1_min == (66.0_sec).to<setl::TimeUnit::MINUTE>())).isTrue();
+    REQUIRE(((1.1_min == (66.0_sec).to<setl::TimeUnit::MINUTE>())));
 
-    assertThat((1.1_min == (66.0_sec).to())).isTrue();
+    REQUIRE(((1.1_min == (66.0_sec).to())));
 
     return true;
   }
 
 };
 
-SetlTimeTest_DO_NOT_USE time_test;
+TEST_CASE("typed time arithmetic and literals") {
+  SetlTimeTest_DO_NOT_USE test;
+  REQUIRE(test.run());
+}
 
+}
+TEST_CASE("unsigned time subtraction measures elapsed time across wraparound") {
+  using Tick = setl::Time<std::uint32_t>;
+  using Delta = Tick::period_type;
+  const auto maximum = std::numeric_limits<std::uint32_t>::max();
+  Tick start(maximum - 2);
+  Tick now(2);
+  REQUIRE((now - start).get() == 5);
+  start += Delta(5);
+  REQUIRE(start == now);
+  now -= Delta(5);
+  REQUIRE(now.get() == maximum - 2);
 }

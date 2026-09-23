@@ -1,5 +1,15 @@
 # Grevir Time
 
+**Public API:** [Grevir Time](https://github.com/owebeeone/grevir-wz/blob/main/docs/api/time.md).
+See [installation](https://github.com/owebeeone/grevir-wz/blob/main/docs/install.md) and
+[supported platforms](https://github.com/owebeeone/grevir-wz/blob/main/docs/supported.md).
+The workspace `/docs` is the current user-facing contract; development
+checkpoints below are historical.
+
+Typed time values, periods, conversions and interactive scaling.
+
+## Development record (historical)
+
 Typed times, periods, unit conversions and interactive scaling extracted from
 Ardoinus. This header-only library depends on Grevir Base. Include `<GrevirTime.h>`
 or an individual `<grevir/time/...hpp>` header; the API still uses namespace `setl`.

@@ -102,7 +102,7 @@ public:
 
   Period() {}
 
-  explicit Period(T value)
+  explicit constexpr Period(T value)
     : value{ value }
   {}
 
